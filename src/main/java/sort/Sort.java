@@ -81,6 +81,7 @@ public class Sort {
     }
     // 关键代码，注意归并过程，下面的代码繁琐的再现了整个繁琐的过程
     // 二个已经排序好的子序列，归并成一个，这个过程是难点，需要一个额外空间去进行归并
+    // 典型的 分而治之 的方法论
     private static void doubleMerger(int[] input,int[] assist,int left,int right){
         int middle = (left + right)/2;
         int i = left;
