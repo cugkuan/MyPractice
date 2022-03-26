@@ -194,23 +194,21 @@ private fun isInner(value:String,c:Char):Boolean{
 
 private fun numberBacktrack(number:List<String>,pickNum:String,tracks:ArrayList<Char>,prints:ArrayList<String>){
     if (number.size == tracks.size){
-
         tracks.forEach {
             print(it)
         }
         print("\n")
         return
     }
-    number.forEach { num ->
-        if (num != pickNum){
-            num.toCharArray().forEach {  c->
-                if (tracks.contains(c).not() ){
-                    tracks.add(c)
-                    numberBacktrack(number,num,tracks,prints)
-                    tracks.removeLast()
-                }
+    val index = number.indexOf(pickNum)
+    for (i in index+1 until  number.size){
+        val num = number[i]
+        num.toCharArray().forEach {  c->
+            if (tracks.contains(c).not() ){
+                tracks.add(c)
+                numberBacktrack(number,num,tracks,prints)
+                tracks.removeLast()
             }
-
         }
     }
 
