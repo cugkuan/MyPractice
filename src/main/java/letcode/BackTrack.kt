@@ -157,7 +157,6 @@ fun solveNQueens(n: Int): List<List<String>> {
 **/
 
 fun letterCombinations(digits: String): List<String> {
-
     val map = HashMap<Char,String>()
     map['2'] = "abc"
     map['3'] = "def"
@@ -167,29 +166,15 @@ fun letterCombinations(digits: String): List<String> {
     map['7'] = "pqrs"
     map['8'] = "tuv"
     map['9'] = "wxyz"
-
-
     val list = ArrayList<String>();
-
     for (c in digits.toCharArray()){
         map.get(c)?.let {
             list.add(it)
         }
     }
-
     val prints = ArrayList<String>()
-
     numberBacktrack(list,"",ArrayList<Char>(),prints)
     return prints
-}
-
-private fun isInner(value:String,c:Char):Boolean{
-    for (i in 0 until  value.length){
-        if (value[i] == c){
-            return true
-        }
-    }
-    return false
 }
 
 private fun numberBacktrack(number:List<String>,pickNum:String,tracks:ArrayList<Char>,prints:ArrayList<String>){
@@ -213,18 +198,6 @@ private fun numberBacktrack(number:List<String>,pickNum:String,tracks:ArrayList<
     }
 
 }
-
-private fun cPrint(tracks:ArrayList<String>, prints: ArrayList<String>){
-
-
-    for (index in 0 until tracks.size){
-
-
-
-    }
-}
-
-
 
 fun main() {
 
