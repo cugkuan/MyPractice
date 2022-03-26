@@ -179,20 +179,38 @@ fun letterCombinations(digits: String): List<String> {
 
     val prints = ArrayList<String>()
 
-    numberBacktrack(list,ArrayList(),prints)
+    numberBacktrack(list,"",ArrayList<Char>(),prints)
     return prints
 }
 
-private fun numberBacktrack(number:List<String>,tracks:ArrayList<String>,prints:ArrayList<String>){
+private fun isInner(value:String,c:Char):Boolean{
+    for (i in 0 until  value.length){
+        if (value[i] == c){
+            return true
+        }
+    }
+    return false
+}
+
+private fun numberBacktrack(number:List<String>,pickNum:String,tracks:ArrayList<Char>,prints:ArrayList<String>){
     if (number.size == tracks.size){
-        cPrint(tracks,prints)
+
+        tracks.forEach {
+            print(it)
+        }
+        print("\n")
         return
     }
     number.forEach { num ->
-        if (tracks.contains(num).not()){
-            tracks.add(num)
-            numberBacktrack(number,tracks,prints)
-            tracks.removeLast()
+        if (num != pickNum){
+            num.toCharArray().forEach {  c->
+                if (tracks.contains(c).not() ){
+                    tracks.add(c)
+                    numberBacktrack(number,num,tracks,prints)
+                    tracks.removeLast()
+                }
+            }
+
         }
     }
 
@@ -213,11 +231,13 @@ private fun cPrint(tracks:ArrayList<String>, prints: ArrayList<String>){
 fun main() {
 
     //  permute2(intArrayOf(1,2,3))
-    nQueen(5)
+ //   nQueen(5)
 
 //   val list = solveNQueens(4)
 //
 //    println(list.size)
+
+    letterCombinations("23")
 
 
 }
