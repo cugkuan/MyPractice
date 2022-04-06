@@ -15,6 +15,10 @@ import letcode.c
 链接：https://leetcode-cn.com/problems/additive-number
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
  */
+
+/**
+ * 这个题耗费的时间比较多，其实也有回溯的思想
+ */
 class AdditiveNumber {
 
     fun isAdditiveNumber(num: String): Boolean {
