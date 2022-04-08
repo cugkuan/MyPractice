@@ -16,36 +16,42 @@ package letcode.dp;
 class CoinChange2 {
 
     /**
-     *  f(n，m) 表示金额为 n ,前 m 种，硬币总的组合数
-     *  金额为 n-1 时，金额 m 可以 放入 组成金额 为 n ，也可能没法放入组成
-     *  f(n,m) = f(n-1,m) or f(n-1,m)+1
+     *  f(n，m) 前 n 种银币 对应 金额 为 m 的最大组合数量
+     *  那么 有，对于  第 n 种 银币，可以是放入也可以是不能放入
+     *  请注意，第 n 种银币，对应的币值 是 coins[n-1]
+     *
+     *  请注意下面的语句,有点绕
+     *  假设，第 n 种银币能放入，那么  f(n,m-coins[n-1])  + f(n-1,m ) 就是 f(n,m) 的组合数
+     *
+     *
      */
     public int change(int amount,int[] coins){
-
         /**
-         *  金额 为 a ,前 i 种 硬币总的组合数
+         *  定义 dp[i][j] 表示前i种银币，金额为 j 的最大组合数
          */
-        int[][] dp = new int[amount+1][coins.length+1];
-        // 当金额为 0 时，总的组合数为0
-        for (int i = 0;i <= coins.length;i++) {
-            dp[0][i] = 0;
+        int[][] dp = new int[coins.length+1][amount+1];
+        //当金额 为 0 的时候，组合数为1
+        for (int i = 0;i <= coins.length;i++){
+            dp[i][0] = 1;
         }
-        for (int i = 1;i <= amount;i++){
-            for (int j = 0;j < coins.length;j++){
-                if (coins[j] - i == 0){
-                    dp[i][j] = dp[i-1][j] +1;
-                }else {
-                    dp[i][j] = dp[i-1][j];
+        for (int i = 1;i <= coins.length;i++){
+            for (int j = 1;j <= amount;j++ ){
+                if (j - coins[i-1] >= 0){
+                    dp[i][j] = dp[i-1][j] + dp[i][j-coins[i-1]];
+                } else{
+                    dp[i][j] =  dp[i-1][j];
                 }
+
             }
         }
-        return dp[amount][coins.length];
+        return dp[coins.length][amount];
 
     }
 
     public static void main(String[] args){
 
         System.out.println(new CoinChange2().change(5,new int[]{1,2,5}));
+        System.out.println(new CoinChange2().change(3,new int[]{2}));
     }
 
 }
