@@ -27,18 +27,6 @@ package letcode.dp
  */
 class LengthOfLIS {
 
-    fun lengthOfLIS(nums: IntArray): Int {
-        var max =1
-        val dp =  IntArray(nums.size +1)
-        repeat(nums.size){
-            dp[it] = 1
-        }
-        for (index in nums.indices){
-            dp[index] = dp(dp,index,nums)
-            max = Math.max(max,dp[index])
-        }
-        return max
-    }
 
     /**
      * 注意这个状态转移方程，很巧妙
@@ -46,15 +34,23 @@ class LengthOfLIS {
      *
      * f(n+1) = max{ if(nums[n+1] > nums[i]) f(i)+1 else f(i)} (0<=i<=n )
      */
-    private fun dp(dp:IntArray ,p:Int,nums: IntArray):Int{
-        var size = 1
-        for (index in 0 until  p){
-            if (nums[p] > nums[index]){
-                val v = dp[index] +1
-                size = Math.max(v,size)
-            }
+    fun lengthOfLIS(nums: IntArray): Int {
+        var max =1
+        val dp =  IntArray(nums.size +1)
+        repeat(nums.size){
+            dp[it] = 1
         }
-        return  size
+        for (i in nums.indices){
+            var size = 1
+            for (j in 0 until  i){
+                if (nums[i] > nums[j]){
+                    size = Math.max(dp[j]+1,size)
+                }
+            }
+            dp[i] = size
+            max = Math.max(max,dp[i])
+        }
+        return max
     }
 }
 
