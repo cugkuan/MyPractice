@@ -1,5 +1,8 @@
 package letcode.dp;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 /**
  * 给你一个二维整数数组 envelopes ，其中 envelopes[i] = [wi, hi] ，表示第 i 个信封的宽度和高度。
  * <p>
@@ -31,37 +34,79 @@ public class MaxEnvelopes {
      * @return
      */
     public int maxEnvelopes(int[][] envelopes) {
-        // dp[i] 为 前 n 个信封。能装入的数量
-        int max = 0;
-        int dp[][] = new int[envelopes.length][2];
-        for (int i = 0;i < envelopes.length;i++){
-            dp[i][1] = 1;
-            dp[i][0] = 1;
+      //  quickSort(envelopes);
+        Arrays.sort(envelopes, (a, b) -> a[0] == b[0] ?
+                b[1] - a[1] : a[0] - b[0]);
+        // LengthOfLIS 算法
+        int[] en = new int[envelopes.length];
+        for (int  i= 0; i < en.length;i++){
+            en[i] = envelopes[i][1];
         }
-
-        for (int i = 0; i < envelopes.length; i++) {
-            int cW = envelopes[i][0];
-            int cH = envelopes[i][1];
-            int s1 = 1;
-            int s2 = 1;
-            for (int j = 0; j < i; j++) {
-                int tW = envelopes[j][0];
-                int tH = envelopes[j][1];
-                // 表示信封能放入
-
-                if (cW > tW && cH > tH){
-                    s1 = Math.max(dp[j][0] +1,s1);
-                }
-                if (cW < tW && cH < tH){
-                    s2 = Math.max(dp[j][1]+1,s2);
+        int[] dp = new int[en.length];
+        dp[0] = 1;
+        int max = 0;
+        for (int i = 0; i < en.length;i++){
+            int size = 1;
+            for (int j = 0;j < i;j++){
+                if (en[i] >  en[j]){
+                    size = Math.max(dp[j] +1,size);
                 }
             }
-            dp[i][0] = s1;
-            dp[i][1] = s2;
-            max = Math.max(max, Math.max(s1,s2));
+            dp[i] = size;
+            max = Math.max(max,size);
         }
         return max;
     }
+
+    private void quickSort(int[][] envelopes){
+        internalQuickSort(envelopes,0,envelopes.length-1);
+    }
+
+    private int compare(int[][] envelopes,int left,int right ){
+        if (envelopes[left][0] <  envelopes[right][0]){
+            return 1;
+        }else  if (envelopes[left][0] == envelopes[right][0]){
+            if (envelopes[left][1] > envelopes[right][1]){
+                return 1;
+            }else if (envelopes[left][1] == envelopes[right][1]){
+                return 0;
+            }
+        }
+        return -1;
+    }
+
+    private void internalQuickSort(int[][] envelopes,int left,int right){
+        if (left < right){
+            int i = left;
+            int j = right;
+            while (i < j) {
+                while (i < j && compare(envelopes,j,left) <= 0) {
+                    j--;
+                }
+                while (i < j && compare(envelopes,i,left) > 0) {
+                    i++;
+                }
+
+                if (compare(envelopes,i,j) == 0 && i < j){
+                    i++;
+                }else {
+                    swap(envelopes,i,j);
+                }
+            }
+            internalQuickSort(envelopes, left, i);
+            internalQuickSort(envelopes, i + 1, right);
+        }
+    }
+
+    private void swap(int[][] envelopes,int left,int right ){
+        int t1 = envelopes[left][0];
+        int t2 = envelopes[left][1];
+        envelopes[left][0] = envelopes[right][0];
+        envelopes[left][1] = envelopes[right][1];
+        envelopes[right][0] = t1;
+        envelopes[right][1] = t2;
+    }
+
 
     public static void main(String[] args) {
         int[][] v = new int[][]{{5, 4}, {6, 4}, {6, 7}, {2, 3}};
