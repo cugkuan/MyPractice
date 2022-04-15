@@ -1,7 +1,6 @@
 package letcode.dp;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 /**
  * 将会获得一系列视频片段，这些片段来自于一项持续时长为 time 秒的体育赛事。这些片段可能有所重叠，也可能长度不一。
@@ -21,37 +20,51 @@ public class VideoStitching {
 
     public int videoStitching(int[][] clips, int time) {
         // 先排序
-        Arrays.sort(clips, new Comparator<int[]>() {
-            @Override
-            public int compare(int[] o1, int[] o2) {
-                if (o1[0] - o2[0] == 0){
-                    return  o2[1] - o1[1];
-                }else {
-                    return o1[0] - o2[0];
-                }
+        Arrays.sort(clips, (o1, o2) -> {
+            if (o1[0] - o2[0] == 0){
+                return  o2[1] - o1[1];
+            }else {
+                return o1[0] - o2[0];
             }
         });
         if (clips[0][0] != 0){
             return -1;
         }
-        int end = clips[0][1];
-        int value = 1;
+        int begin = -1;
+        int value = 0;
         int distance = 0;
-        int nextEnd = end;
-        for (int i =1 ;i < clips.length;i++){
-            if (clips[i][0] <= end ){
-                int d = clips[i][1] - end;
+        int end = 0;
+        // 选择区间内的最大长度
+        int i = 0;
+        while (true){
+            if (end >= time){
+                break;
+            }
+            if (i >=  clips.length){
+                break;
+            }
+            if (clips[i][0] <= begin){
+                int d = clips[i][1]  - begin;
                 if (d > distance){
                     distance = d;
-                    nextEnd = clips[i][1];
+                    end = clips[i][1];
+                }
+                if (end >= time){
+                    return value;
                 }
             }else {
-                value++;
-                distance = 0;
-                end = clips[i][i];
+                if (clips[i][0] > end){
+                    // 中间断层缺失
+                    return -1;
+                }
+                begin = end;
+                end = clips[i][1];
+                distance = end  - begin;
+                value ++;
             }
+            i++;
         }
-        if (end < time){
+        if (end <  time){
             return -1;
         }
         return value;
@@ -59,10 +72,22 @@ public class VideoStitching {
 
     public static void main(String[] args){
 
+
+
+        System.out.println(new VideoStitching().videoStitching(new int[][]{{0,2},{4,8}},5) == -1);
+        System.out.println(new VideoStitching().videoStitching(new int[][]{{0,2},{1,6},{3,10}},10) == 3);
+
         int[][] test1 = new int[][]{{0,1},{6,8},{0,2},{5,6},{0,4},{0,3},{6,7},{1,3},{4,7},{1,4},{2,5},{2,6},{3,4},{4,5},{5,7},{6,9}};
+        System.out.println(new VideoStitching().videoStitching(test1,9) == 3);
+        int[][] test2 = new int[][]{{0,2},{4,6},{8,10},{1,9},{1,5},{5,9}};
+        System.out.println(new VideoStitching().videoStitching(test2,10)  == 3);
 
 
-        System.out.println(new VideoStitching().videoStitching(test1,9));
+
+        int[][] test3 = new int[][]{{0,1},{1,2}};
+        System.out.println(new VideoStitching().videoStitching(test3,5) == -1);
+        int[][] test4 = new int[][]{ {5,7},{1,8},{0,0},{2,3},{4,5},{0,6},{5,10},{7,10}};
+        System.out.println(new VideoStitching().videoStitching(test4,5) == 1);
 
     }
 
