@@ -220,6 +220,76 @@ class MergeTwoLists {
             }
         }
     }
+
+    /**
+     * 给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。
+     * 这个解法是比较低阶的算法
+     */
+    fun reverseList(head: ListNode?): ListNode? {
+        // 下面的代码是非常传统的做法，
+        var pre: ListNode? = null
+        var cur = head
+        while (cur?.next != null) {
+            val next = cur?.next
+            cur?.next = pre
+            pre = cur
+            cur = next
+        }
+        cur?.next = pre
+        return cur
+    }
+
+    /**
+     * 这个递归有点巧妙
+     */
+    fun reverseList2(head: ListNode?): ListNode? {
+        return if (head?.next == null) {
+            head
+        } else {
+            val last = reverseList2(head)
+            head?.next?.next = head
+            head?.next = null
+            last
+        }
+    }
+
+    /**
+     * https://leetcode-cn.com/problems/reverse-linked-list-ii/
+     *
+     */
+    fun reverseBetween(head: ListNode?, left: Int, right: Int): ListNode? {
+        var index = 2
+        var begin: ListNode? = head
+        while (index < left) {
+            index++
+            begin = head?.next
+        }
+         val last = reverseN(begin?.next,right-left +1)
+        begin?.next = last
+        return head
+    }
+
+
+    /**
+     * 后驱节点，前n个元素的反转
+     */
+    var successor: ListNode? = null // 后驱节点
+    fun reverseN(head: ListNode?, n: Int): ListNode? {
+        if (n == 1) {
+            successor = head?.next
+            return head
+        }
+        val last = reverseN(head?.next, n-1)
+        head?.next?.next = head
+        head?.next = successor
+        return last
+    }
+
+    fun testReverseN(head: ListNode?, n: Int){
+        val node = reverseN(head,n)
+
+        System.out.println("xxxx${node?.`val`}")
+    }
 }
 
 fun main() {
@@ -251,18 +321,37 @@ fun main() {
 //        }
 //    })
 
-    val node1 = ListNode(3)
-    val node11 = ListNode(2)
-    val node12 = ListNode(0)
-    val node13 = ListNode(-4)
+//    val node1 = ListNode(3)
+//    val node11 = ListNode(2)
+//    val node12 = ListNode(0)
+//    val node13 = ListNode(-4)
+//
+////    node1.next = node11
+////    node11.next = node12
+////    node12.next = node13
+////    node13.next = node11
+//    node1.next = node1
+//
+//    println(MergeTwoLists().detectCycle(node1)?.`val`)
 
-//    node1.next = node11
-//    node11.next = node12
-//    node12.next = node13
-//    node13.next = node11
-    node1.next = node1
 
-    println(MergeTwoLists().detectCycle(node1)?.`val`)
+    val node1 = ListNode(1)
+    val node2 = ListNode(2)
+    val node3 = ListNode(3)
+    val node4 = ListNode(4)
+    val node5 = ListNode(5)
+
+    node1.next = node2
+    node2.next = node3
+    node3.next = node4
+    node4.next = node5
+
+    MergeTwoLists().reverseBetween(node1,2,4)
+
+
+ //   MergeTwoLists().reverseBetween(node1,2,4)
+
+
 
 
 }
