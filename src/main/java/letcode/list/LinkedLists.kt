@@ -1,9 +1,5 @@
 package letcode.list
 
-class ListNode(var `val`: Int) {
-    var next: ListNode? = null
-}
-
 class MergeTwoLists {
     /**
      * 合并链表
