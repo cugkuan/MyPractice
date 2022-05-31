@@ -47,6 +47,25 @@ private fun checkPalindrome(s: String, left: Int, right: Int): String {
     return s.substring(i, j)
 }
 
+/**
+ * https://leetcode.cn/problems/longest-substring-without-repeating-characters/
+ * 滑动窗口 解决方案
+ */
+
+//private fun isSatisfy(s: String,left: Int,right: Int){
+//
+//    var
+//}
+//fun lengthOfLongestSubstring(s: String): Int {
+//
+//    var i;
+//    var offset
+//    while (true){
+//
+//    }
+//
+//}
+
 fun main() {
 
     println(longestPalindrome("abb"))
